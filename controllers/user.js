@@ -1,7 +1,10 @@
 const { response } = require('express');
 
 const getUsers = (req, res = response) => {
-    res.status(201).json({ msg: 'GET API' });
+
+    const {q, name = "No name", age} = req.query;
+    
+    res.status(201).json({ msg: 'GET API', q, name, age });
 }
 
 const createUser = (req, res = response) => {
@@ -9,8 +12,13 @@ const createUser = (req, res = response) => {
     res.status(201).json({ msg: 'CREATE API', name, age });
 }
 
-const updateUser = (req, res = response) => {
-    res.status(201).json({ msg: 'PUT API' });
+const updateUserById = (req, res = response) => {
+
+    const id = req.params.id;
+
+    console.log(id);
+
+    res.status(201).json({ msg: 'PUT API', id });
 }
 
 const patchUser = (req, res = response) => {
@@ -22,5 +30,5 @@ const deleteUser = (req, res = response) => {
 }
 
 module.exports = {
-    getUsers, updateUser, deleteUser, createUser, patchUser,
+    getUsers, updateUserById, deleteUser, createUser, patchUser,
 }
