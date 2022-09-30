@@ -5,7 +5,8 @@ const getUsers = (req, res = response) => {
 }
 
 const createUser = (req, res = response) => {
-    res.status(201).json({ msg: 'CREATE API' });
+    const {name, age} = req.body;
+    res.status(201).json({ msg: 'CREATE API', name, age });
 }
 
 const updateUser = (req, res = response) => {
