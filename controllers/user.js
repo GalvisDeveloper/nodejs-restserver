@@ -3,6 +3,8 @@ const { response } = require('express');
 const getUsers = (req, res = response) => {
 
     const {q, name = "No name", age} = req.query;
+
+    console.log(q)
     
     res.status(201).json({ msg: 'GET API', q, name, age });
 }

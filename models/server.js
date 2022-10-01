@@ -1,6 +1,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const { dbConnection } = require('../db/config');
 
 class Server {
 
@@ -10,6 +11,9 @@ class Server {
 
         this.usersPath = '/api/users';
 
+        // Db connection
+        this.connectionDb();
+
         // Middlewares 
         this.middlewares();
 
@@ -17,21 +21,25 @@ class Server {
         this.routes();
     }
 
+    async connectionDb(){
+        await dbConnection();
+    }
+    
     middlewares() {
         // CORS 
         this.app.use(cors())
-
+        
         // Read and parse the body data
         this.app.use(express.json());
-
+        
         // Public directory
         this.app.use(express.static('public'));
     }
-
+    
     routes() {
         this.app.use(this.usersPath, require('../routes/user'))
     }
-
+    
     listen() {
         this.app.listen(this.port, () => {
             console.log(`The app is running at ${this.port}`);
