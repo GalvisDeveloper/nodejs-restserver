@@ -1,17 +1,27 @@
 const { response } = require('express');
 
+const User = require('../models/user/user');
+
 const getUsers = (req, res = response) => {
 
-    const {q, name = "No name", age} = req.query;
+    const { q, name = "No name", age } = req.query;
 
     console.log(q)
-    
+
     res.status(201).json({ msg: 'GET API', q, name, age });
 }
 
-const createUser = (req, res = response) => {
-    const {name, age} = req.body;
-    res.status(201).json({ msg: 'CREATE API', name, age });
+const createUser = async (req, res = response) => {
+    const body = req.body;
+
+    // Instance creation
+    const user = new User(body);
+
+    // Save user on db
+    await user.save();
+
+    console.log(user)
+    res.json({ user });
 }
 
 const updateUserById = (req, res = response) => {
