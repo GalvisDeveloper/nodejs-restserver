@@ -2,6 +2,7 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/user/user');
+const { validationResult } = require('express-validator');
 
 const getUsers = (req, res = response) => {
 
@@ -13,12 +14,26 @@ const getUsers = (req, res = response) => {
 }
 
 const createUser = async (req, res = response) => {
+
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json(errors);
+    }
+
     const { name, email, password, role } = req.body;
 
     // Instance creation
     const user = new User({ name, email, password, role });
 
     // Verify if the email is valid
+    const itExists = await User.findOne({ email });
+
+    if (itExists) {
+        return res.status(400).json({
+            msg: 'The email address is already in use'
+        })
+    }
 
     // Encrypt the password
     /**
