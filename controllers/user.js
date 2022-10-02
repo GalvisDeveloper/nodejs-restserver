@@ -1,8 +1,8 @@
 const { response } = require('express');
+
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/user/user');
-const { validationResult } = require('express-validator');
 
 const getUsers = (req, res = response) => {
 
@@ -14,12 +14,6 @@ const getUsers = (req, res = response) => {
 }
 
 const createUser = async (req, res = response) => {
-
-    const errors = validationResult(req)
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json(errors);
-    }
 
     const { name, email, password, role } = req.body;
 
