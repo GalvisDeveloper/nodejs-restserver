@@ -6,7 +6,7 @@ const { getUsers,
     deleteUser,
     patchUser,
     updateUserById } = require('../controllers/user');
-const { checkRole } = require('../helpers/db-validators');
+const { checkRole, emailRegistered } = require('../helpers/db-validators');
 const { validateFields } = require('../middlewares/validate-fields');
 
 
@@ -22,6 +22,7 @@ router.put('/updateById/:id', updateUserById);
 router.post('/', [
     check('name', 'The name is required').not().isEmpty(),
     check('email', 'The email address is not valid').isEmail(),
+    check('email').custom(emailRegistered),
     check('password', 'The password must be at least 6 characters').isLength({ min: 6 }),
     // check('role', 'The role is not allowed').isIn(['ADMIN_ROLE', 'USER_ROLE']),
     check('role').custom(checkRole),

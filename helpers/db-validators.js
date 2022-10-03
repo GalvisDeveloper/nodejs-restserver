@@ -1,6 +1,6 @@
 
 const Role = require('../models/role/role');
-// const User = require('../models/user/user');
+const User = require('../models/user/user');
 
 const checkRole = async (role = '') => {
     const roleExists = await Role.findOne({ role });
@@ -9,16 +9,12 @@ const checkRole = async (role = '') => {
     }
 }
 
-// const emailRegistered = async (req, res, next) => {
-//     const emailExists = await User.findOne({ email });
-//     if (emailExists) {
-//         return res.status(400).json({
-//             msg: `The email ${email} is already in use`
-//         })
-//     }
-//     next();
-// }
+const emailRegistered = async (email = '') => {
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+        throw new Error(`The email ${email} is already in use`);
+    }
+}
 
 
-module.exports = { checkRole
- };
+module.exports = { checkRole, emailRegistered };
