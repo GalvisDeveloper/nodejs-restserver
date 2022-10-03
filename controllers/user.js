@@ -3,13 +3,15 @@ const { encryptPass } = require('../helpers/encrypt-password');
 
 const User = require('../models/user/user');
 
-const getUsers = (req, res = response) => {
+const getUsers = async (req, res = response) => {
 
-    const { q, name = "No name", age } = req.query;
+    const { limit = 2, since = 0 } = req.query;
 
-    console.log(q)
+    const users = await User.find()
+        .skip(since)
+        .limit(Number(limit));
 
-    res.status(201).json({ msg: 'GET API', q, name, age });
+    res.json({ users });
 }
 
 const createUser = async (req, res = response) => {
@@ -40,7 +42,7 @@ const updateUserById = async (req, res = response) => {
     const user = await User.findByIdAndUpdate(id, rest);
 
     console.log(user);
-    res.json({ user });
+    res.json(user);
 }
 
 const patchUser = (req, res = response) => {
