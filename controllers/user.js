@@ -50,12 +50,20 @@ const updateUserById = async (req, res = response) => {
     res.json(user);
 }
 
-const patchUser = (req, res = response) => {
-    res.status(201).json({ msg: 'PATCH API' });
+const deleteUser = async (req, res = response) => {
+
+    const { id } = req.params;
+    
+    // Delete phisically existing user (Not recommended)
+    // const user = await User.findByIdAndDelete(id);
+
+    const user = await User.findByIdAndUpdate(id, { status: false });
+
+    res.json(user);
 }
 
-const deleteUser = (req, res = response) => {
-    res.status(201).json({ msg: 'DELETE API' });
+const patchUser = (req, res = response) => {
+    res.json({ msg: 'PATCH API' });
 }
 
 module.exports = {

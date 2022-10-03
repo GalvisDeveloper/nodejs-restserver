@@ -12,11 +12,10 @@ const { validateFields } = require('../middlewares/validate-fields');
 
 const router = Router();
 
+// Get route
 router.get('/', getUsers);
 
-
-
-
+// Update route
 router.put('/:id', [
     check('id', 'The ID is not valid').isMongoId(),
     check('id').custom(checkId),
@@ -24,6 +23,7 @@ router.put('/:id', [
     validateFields
 ], updateUserById);
 
+// Creation route
 router.post('/', [
     check('name', 'The name is required').not().isEmpty(),
     check('email', 'The email address is not valid').isEmail(),
@@ -34,8 +34,14 @@ router.post('/', [
     validateFields
 ], createUser);
 
-router.delete('/', deleteUser);
+// Delete route
+router.delete('/:id', [
+    check('id', 'The ID is not valid').isMongoId(),
+    check('id').custom(checkId),
+    validateFields
+], deleteUser);
 
+// Partial update route
 router.patch('/', patchUser);
 
 module.exports = router;
