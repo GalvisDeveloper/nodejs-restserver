@@ -7,11 +7,16 @@ const getUsers = async (req, res = response) => {
 
     const { limit = 2, since = 0 } = req.query;
 
-    const users = await User.find()
-        .skip(since)
-        .limit(Number(limit));
+    const queryUserStatus = { status: true };
 
-    res.json({ users });
+    const [total, users] = await Promise.all([
+        User.countDocuments(queryUserStatus),
+        User.find(queryUserStatus)
+            .skip(since)
+            .limit(Number(limit))
+    ]);
+
+    res.json({ total, users });
 }
 
 const createUser = async (req, res = response) => {
