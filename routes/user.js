@@ -6,7 +6,7 @@ const { getUsers,
     deleteUser,
     patchUser,
     updateUserById } = require('../controllers/user');
-const { checkRole, emailRegistered } = require('../helpers/db-validators');
+const { checkRole, emailRegistered, checkId } = require('../helpers/db-validators');
 const { validateFields } = require('../middlewares/validate-fields');
 
 
@@ -17,7 +17,12 @@ router.get('/', getUsers);
 
 
 
-router.put('/updateById/:id', updateUserById);
+router.put('/:id', [
+    check('id', 'The ID is not valid').isMongoId(),
+    check('id').custom(checkId),
+    check('role').custom(checkRole),
+    validateFields
+], updateUserById);
 
 router.post('/', [
     check('name', 'The name is required').not().isEmpty(),

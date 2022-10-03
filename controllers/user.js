@@ -1,6 +1,5 @@
 const { response } = require('express');
-
-const bcrypt = require('bcryptjs');
+const { encryptPass } = require('../helpers/encrypt-password');
 
 const User = require('../models/user/user');
 
@@ -20,37 +19,28 @@ const createUser = async (req, res = response) => {
     // Instance creation
     const user = new User({ name, email, password, role });
 
-    // Verify if the email is valid
-    const itExists = await User.findOne({ email });
-
-    if (itExists) {
-        return res.status(400).json({
-            msg: 'The email address is already in use'
-        })
-    }
-
-    // Encrypt the password
-    /**
-     * @salt = number of rounds for the password, to make it harder
-     * to decrypt  
-     */
-    const salt = bcrypt.genSaltSync();
-    user.password = bcrypt.hashSync(password, salt);
+    user.password = encryptPass(password);
 
     // Save user on db
     await user.save();
 
-    console.log(user)
+    console.log(user);
     res.json({ user });
 }
 
-const updateUserById = (req, res = response) => {
+const updateUserById = async (req, res = response) => {
 
-    const id = req.params.id;
+    const { id } = req.params;
+    const { _id, password, google, email, ...rest } = req.body;
 
-    console.log(id);
+    if (password) {
+        rest.password = encryptPass(password);
+    }
 
-    res.status(201).json({ msg: 'PUT API', id });
+    const user = await User.findByIdAndUpdate(id, rest);
+
+    console.log(user);
+    res.json({ user });
 }
 
 const patchUser = (req, res = response) => {
