@@ -36,8 +36,8 @@ const validateJWT = async (req = request, res = response, next) => {
         next();
     } catch (error) {
         console.log(error);
-        res.status(401).json({
-            msg: 'Invalid token provided'
+        res.status(403).json({
+            msg: 'The token has expired or was invalid',
         });
     }
 

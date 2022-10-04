@@ -6,10 +6,10 @@ const { getUsers,
     deleteUser,
     patchUser,
     updateUserById } = require('../controllers/user');
+
 const { checkRole, emailRegistered, checkId } = require('../helpers/db-validators');
-const { validateFields } = require('../middlewares/validate-fields');
-const { validateJWT } = require('../middlewares/validate-jwt');
-const { isAdmin, hasRole } = require('../middlewares/validate-role');
+
+const { validateFields, validateJWT, hasRole, isAdmin } = require('../middlewares');
 
 
 const router = Router();
