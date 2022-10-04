@@ -53,13 +53,19 @@ const updateUserById = async (req, res = response) => {
 const deleteUser = async (req, res = response) => {
 
     const { id } = req.params;
-    
+
     // Delete phisically existing user (Not recommended)
     // const user = await User.findByIdAndDelete(id);
 
     const user = await User.findByIdAndUpdate(id, { status: false });
 
-    res.json(user);
+    if (!user.status) {
+        res.status(400).json({
+            msg: 'This user was already deleted',
+        })
+    }
+
+    res.json( user);
 }
 
 const patchUser = (req, res = response) => {
