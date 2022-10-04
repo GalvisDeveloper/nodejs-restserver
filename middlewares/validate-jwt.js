@@ -14,14 +14,13 @@ const validateJWT = async (req = request, res = response, next) => {
         })
     }
 
-
     try {
         const { uid } = jwt.verify(token, process.env.PRIVATE_KEY);
 
         const user = await User.findById(uid);
 
         if (!user) {
-            return res.status(401).json({
+            return res.status(400).json({
                 msg: "There is no user with that uid",
             });
         }
@@ -31,6 +30,7 @@ const validateJWT = async (req = request, res = response, next) => {
                 msg: 'The user authenticated is no longer active',
             });
         }
+
         req.user = user;
 
         next();
