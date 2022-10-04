@@ -24,4 +24,22 @@ const isAdmin = async (req = request, res = response, next) => {
 
 }
 
-module.exports = { isAdmin };
+const hasRole = (...roles) => {
+    return (req = request, res = response, next) => {
+        if (!req.user) {
+            return res.status(500).json({
+                msg: 'There is no a token provided to verify the role'
+            })
+        }
+
+        if(!roles.includes(req.user.role)){
+            return res.status(401).json({ 
+                msg: `This service requires one of this roles ${roles}`
+            });
+        }
+        console.log(roles, req.user.role)
+        next();
+    }
+}
+
+module.exports = { isAdmin, hasRole };

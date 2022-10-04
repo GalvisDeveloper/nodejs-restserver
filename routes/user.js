@@ -9,7 +9,7 @@ const { getUsers,
 const { checkRole, emailRegistered, checkId } = require('../helpers/db-validators');
 const { validateFields } = require('../middlewares/validate-fields');
 const { validateJWT } = require('../middlewares/validate-jwt');
-const { isAdmin } = require('../middlewares/validate-role');
+const { isAdmin, hasRole } = require('../middlewares/validate-role');
 
 
 const router = Router();
@@ -39,7 +39,8 @@ router.post('/', [
 // Delete route
 router.delete('/:id', [
     validateJWT,
-    isAdmin,
+    // isAdmin,
+    hasRole('ADMIN_ROLE', 'SALES_ROLE'),
     check('id', 'The ID is not valid').isMongoId(),
     check('id').custom(checkId),
     validateFields

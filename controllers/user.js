@@ -59,11 +59,11 @@ const deleteUser = async (req, res = response) => {
 
     const user = await User.findByIdAndUpdate(id, { status: false });
 
-    if (!user.status) {
-        res.status(400).json({
-            msg: 'This user was already deleted',
-        })
-    }
+    // if (!user.status) {
+    //     res.status(400).json({
+    //         msg: 'This user was already deleted',
+    //     })
+    // }
 
     res.json( user);
 }
