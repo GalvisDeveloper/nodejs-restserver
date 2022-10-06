@@ -10,11 +10,11 @@
 
 <body>
     <h1>Google Sign-In</h1>
-    
+
     <hr>
 
-    <div id="g_id_onload" data-client_id="517160354385-urhgco4aa25i7bmjidi3gn3lfqja7c6a.apps.googleusercontent.com" data-callback="handleCredentialResponse"
-        data-auto_prompt="false">
+    <div id="g_id_onload" data-client_id="517160354385-urhgco4aa25i7bmjidi3gn3lfqja7c6a.apps.googleusercontent.com"
+        data-callback="handleCredentialResponse" data-auto_prompt="false">
     </div>
     <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
         data-shape="rectangular" data-logo_alignment="left">
@@ -23,9 +23,22 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         function handleCredentialResponse(response) {
-            
+
             // Google token: ID_TOKEN
-            console.log('id token' + response.credential);
+            // console.log('id token' + response.credential);
+
+            const body = { id_token: response.credential };
+
+            fetch('http://localhost:8080/api/auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            }).then(resp => resp.json())
+                .then(resp => {
+                    console.log(resp)
+                }).catch(err => console.warn(err));
 
         }
     </script>

@@ -36,9 +36,9 @@ const login = async (req, res = response) => {
 
         // Generate JWT
         const token = await generateJWT(user.id);
-        
+
         res.json({ user, token });
-        
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error })
@@ -46,6 +46,16 @@ const login = async (req, res = response) => {
 
 }
 
+const signInGoogle = (req, res = response) => {
+
+    const { id_token } = req.body;
+
+    res.json({
+        id_token
+    });
+
+}
+
 module.exports = {
-    login,
+    login, signInGoogle
 }
