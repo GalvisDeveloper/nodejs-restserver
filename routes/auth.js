@@ -4,7 +4,6 @@ const { check } = require('express-validator');
 const { login, signInGoogle } = require('../controllers/auth');
 const { validateFields } = require('../middlewares/validate-fields');
 
-
 const router = Router();
 
 // Post login
