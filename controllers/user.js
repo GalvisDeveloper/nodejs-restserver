@@ -1,4 +1,4 @@
-const { response } = require('express');
+const { response, request } = require('express');
 const { encryptPass } = require('../helpers/encrypt-password');
 
 const User = require('../models/user/user');
@@ -17,6 +17,22 @@ const getUsers = async (req, res = response) => {
     ]);
 
     res.json({ total, users });
+}
+
+const getUserById = async (req, res = response) => {
+
+    const { id } = req.params;
+
+    // Search user 
+    const user = await User.findById(id);
+
+    if (!user) {
+        res.status(400).json({
+            msg: "This user doesn't exist"
+        });
+    } else {
+        res.status(200).json(user)
+    }
 }
 
 const createUser = async (req, res = response) => {
@@ -59,10 +75,10 @@ const deleteUser = async (req, res = response) => {
 
     const user = await User.findByIdAndUpdate(id, { status: false });
 
-   
-    
 
-    res.json( user);
+
+
+    res.json(user);
 }
 
 const patchUser = (req, res = response) => {
@@ -71,4 +87,5 @@ const patchUser = (req, res = response) => {
 
 module.exports = {
     getUsers, updateUserById, deleteUser, createUser, patchUser,
+    getUserById
 }
