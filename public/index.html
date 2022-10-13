@@ -20,6 +20,12 @@
         data-shape="rectangular" data-logo_alignment="left">
     </div>
 
+    <div>
+        <button id="signout">
+            Sign Out
+        </button>
+    </div>
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         function handleCredentialResponse(response) {
@@ -27,9 +33,14 @@
             // Google token: ID_TOKEN
             // console.log('id token' + response.credential);
 
+            let isRunningLocal = window.location.hostname.includes('localhost');
+            let url = isRunningLocal ? 'http://localhost:8080/api/auth/google' :
+                'https://nodejsapp-restserver.herokuapp.com/api/auth/google';
+
             const body = { id_token: response.credential };
 
-            fetch('http://localhost:8080/api/auth/google', {
+
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,10 +48,27 @@
                 body: JSON.stringify(body)
             }).then(resp => resp.json())
                 .then(resp => {
+                    localStorage.setItem('email', resp.user.email);
                     console.log(resp)
+                    location.reload();
                 }).catch(err => console.warn(err));
 
         }
+
+        const button = document.getElementById('signout');
+
+        button.onclick = () => {
+            console.log(google.accounts.id)
+            google.accounts.id.disableAutoSelect();
+
+            google.accounts.id.revoke(localStorage.getItem('email'), done => {
+                console.log("si agh bueno")
+                localStorage.clear();
+                location.reload();
+            });
+        }
+
+
     </script>
 </body>
 

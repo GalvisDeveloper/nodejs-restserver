@@ -57,7 +57,7 @@ const signInGoogle = async (req, res = response) => {
 
         let user = await User.findOne({ email });
 
-        console.log(user)
+        // console.log(user)
 
         // If the user doesn't exist, create him
         if (!user) {
