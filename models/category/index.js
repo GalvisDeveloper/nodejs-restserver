@@ -6,11 +6,17 @@ const CategorySchema = Schema({
     name: {
         type: String,
         required: [true, 'The name is required'],
+        unique: true,
     },
-
+    status: {
+        type: Boolean,
+        default: true,
+        required: true,
+    },
     user: {
-        type: String,
-        required: [true, 'The email is required'],
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario',
+        required: true,
         unique: true,
     },
 

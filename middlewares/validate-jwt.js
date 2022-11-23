@@ -1,7 +1,7 @@
 
 const { response, request } = require('express');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user/user');
+const User = require('../models/user');
 
 
 const validateJWT = async (req = request, res = response, next) => {
@@ -9,13 +9,13 @@ const validateJWT = async (req = request, res = response, next) => {
     const token = req.header('x-token');
 
     if (!token) {
-        res.status(401).json({
+        return res.status(401).json({
             msg: 'Json web token must be provided'
         })
     }
 
     try {
-        const { uid } = jwt.verify(token, process.env.PRIVATE_KEY);
+        const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
 
         const user = await User.findById(uid);
 

@@ -36,7 +36,7 @@ router.delete('/', [
 ], deleteProduct);
 
 // Update a product - private (TOKEN required)
-router.put('/', [
+router.put('/:id', [
     validateFields,
 ], updateProduct);
 

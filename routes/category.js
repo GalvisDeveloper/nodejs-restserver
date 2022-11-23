@@ -9,6 +9,7 @@ const { getAllCategories,
     createCategory,
     deleteCategory,
     updateCategory } = require('../controllers/category');
+const { validateJWT } = require('../middlewares');
 
 const router = Router();
 
@@ -27,16 +28,20 @@ router.get('/:id', [
 
 // Create a new category - private (TOKEN required)
 router.post('/', [
+    validateJWT,
+    check('name', 'The name is required').not().isEmpty(),
     validateFields,
 ], createCategory);
 
 // Delete a category - private (TOKEN required)
-router.delete('/', [
+router.delete('/:id', [
+    check('id', 'The ID is not valid').isMongoId(),
+    check('id').custom(checkId),
     validateFields,
 ], deleteCategory);
 
 // Update a category - private (TOKEN required)
-router.put('/', [
+router.put('/:id', [
     validateFields,
 ], updateCategory);
 

@@ -1,6 +1,6 @@
 
 const { request, response } = require('express');
-const Role = require('../models/role/role');
+const Role = require('../models/role');
 
 
 const isAdmin = async (req = request, res = response, next) => {
