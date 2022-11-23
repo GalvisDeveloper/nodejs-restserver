@@ -1,4 +1,5 @@
 
+const Category = require('../models/category');
 const Role = require('../models/role');
 const User = require('../models/user');
 
@@ -16,11 +17,18 @@ const emailRegistered = async (email = '') => {
     }
 }
 
-const checkId = async (id) => {
-    const idExists = await User.findById( id );
+const checkIdUser = async (id) => {
+    const idExists = await User.findById(id);
     if (!idExists) {
         throw new Error(`There is not a user with id -> ${id}`);
     }
 };
 
-module.exports = { checkRole, emailRegistered, checkId };
+const checkIdCategory = async (id) => {
+    const idExists = await Category.findById(id);
+    if (!idExists) {
+        throw new Error(`There is not a category with id -> ${id}`);
+    }
+}
+
+module.exports = { checkRole, emailRegistered, checkIdUser, checkIdCategory };

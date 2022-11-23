@@ -8,7 +8,7 @@ const { getUsers,
     updateUserById,
     getUserById } = require('../controllers/user');
 
-const { checkRole, emailRegistered, checkId } = require('../helpers/db-validators');
+const { checkRole, emailRegistered, checkIdUser } = require('../helpers/db-validators');
 
 const { validateFields, validateJWT, hasRole, isAdmin } = require('../middlewares');
 
@@ -21,14 +21,14 @@ router.get('/', getUsers);
 // Get user by id
 router.get('/:id', [
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkId),
+    check('id').custom(checkIdUser),
     validateFields,
 ], getUserById)
 
 // Update user
 router.put('/:id', [
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkId),
+    check('id').custom(checkIdUser),
     check('role').custom(checkRole),
     validateFields
 ], updateUserById);
@@ -50,7 +50,7 @@ router.delete('/:id', [
     // isAdmin,
     hasRole('ADMIN_ROLE', 'SALES_ROLE'),
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkId),
+    check('id').custom(checkIdUser),
     validateFields
 ], deleteUser);
 

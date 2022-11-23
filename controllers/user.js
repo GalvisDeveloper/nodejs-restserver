@@ -21,18 +21,26 @@ const getUsers = async (req, res = response) => {
 
 const getUserById = async (req, res = response) => {
 
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    // Search user 
-    const user = await User.findById(id);
+        // Search user 
+        const user = await User.findById(id);
 
-    if (!user) {
-        res.status(400).json({
-            msg: "This user doesn't exist"
-        });
-    } else {
-        res.status(200).json(user)
+        if (!user) {
+            res.status(400).json({
+                msg: "This user doesn't exist"
+            });
+        } else {
+            res.status(200).json(user)
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            msg: "Internal Server Error",
+        })
     }
+
 }
 
 const createUser = async (req, res = response) => {
@@ -62,7 +70,6 @@ const updateUserById = async (req, res = response) => {
 
     const user = await User.findByIdAndUpdate(id, rest);
 
-    console.log(user);
     res.json(user);
 }
 
@@ -74,9 +81,6 @@ const deleteUser = async (req, res = response) => {
     // const user = await User.findByIdAndDelete(id);
 
     const user = await User.findByIdAndUpdate(id, { status: false });
-
-
-
 
     res.json(user);
 }

@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { validateFields } = require('../middlewares/validate-fields');
-const { checkId } = require('../helpers/db-validators');
+const { checkId, checkIdCategory } = require('../helpers/db-validators');
 
 const { getAllCategories,
     getCategoryById,
@@ -15,14 +15,12 @@ const router = Router();
 
 
 // Get all categories - public
-router.get('/', [
-    validateFields
-], getAllCategories);
+router.get('/', getAllCategories);
 
 // Get category by Id
 router.get('/:id', [
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkId),
+    check('id').custom(checkIdCategory),
     validateFields,
 ], getCategoryById);
 
@@ -36,12 +34,14 @@ router.post('/', [
 // Delete a category - private (TOKEN required)
 router.delete('/:id', [
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkId),
+    check('id').custom(checkIdCategory),
     validateFields,
 ], deleteCategory);
 
 // Update a category - private (TOKEN required)
 router.put('/:id', [
+    check('id', 'The ID is not valid').isMongoId(),
+    check('id').custom(checkIdCategory),
     validateFields,
 ], updateCategory);
 

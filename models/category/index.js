@@ -15,12 +15,18 @@ const CategorySchema = Schema({
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'Usuario',
+        ref: 'User',
         required: true,
         unique: true,
     },
 
 });
+
+CategorySchema.methods.toJSON = function () {
+    const { __v, _id, ...category } = this.toObject();
+    category.uid = _id;
+    return category;
+}
 
 
 module.exports = model("Category", CategorySchema);
