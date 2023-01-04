@@ -17,18 +17,25 @@ const emailRegistered = async (email = '') => {
     }
 }
 
-const checkIdUser = async (id) => {
-    const idExists = await User.findById(id);
+const checkId = async (id, model) => {
+    const idExists = await model.findById(id);
     if (!idExists) {
-        throw new Error(`There is not a user with id -> ${id}`);
-    }
-};
-
-const checkIdCategory = async (id) => {
-    const idExists = await Category.findById(id);
-    if (!idExists) {
-        throw new Error(`There is not a category with id -> ${id}`);
+        throw new Error(`There is not an item with id -> ${id}`);
     }
 }
 
-module.exports = { checkRole, emailRegistered, checkIdUser, checkIdCategory };
+// const checkIdUser = async (id) => {
+//     const idExists = await User.findById(id);
+//     if (!idExists) {
+//         throw new Error(`There is not a user with id -> ${id}`);
+//     }
+// };
+
+// const checkIdCategory = async (id) => {
+//     const idExists = await Category.findById(id);
+//     if (!idExists) {
+//         throw new Error(`There is not a category with id -> ${id}`);
+//     }
+// }
+
+module.exports = { checkRole, emailRegistered, checkId };

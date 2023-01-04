@@ -6,32 +6,49 @@ const ProductSchema = Schema({
     name: {
         type: String,
         required: [true, 'The name is required'],
+        unique: true,
     },
 
-    priceUni: {
+    price: {
         type: Number,
-        required: [true, 'The price is required'],
-        // unique: true,
+        default: 0,
     },
 
     category: {
-        type: String,
-        required: [true, 'The password is required'],
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true,
+        unique: true,
     },
 
     available: {
         type: Boolean,
-        default: false,
+        default: true,
     },
 
     user: {
-        type: String,
-        required: [true, 'The role is required'],
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        unique: true,
         enum: ['ADMIN_ROLE', 'USER_ROLE'],
     },
 
+    description: {
+        type: String,
+    },
+
+    status: {
+        type: Boolean,
+        default: true,
+        required: true,
+    },
 
 });
 
+ProductSchema.methods.toJSON = function () {
+    const { __v, status, ...data } = this.toObject();
+    return data;
+}
 
 module.exports = model("Product", ProductSchema);

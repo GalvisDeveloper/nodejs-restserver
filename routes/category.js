@@ -2,17 +2,19 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { validateFields } = require('../middlewares/validate-fields');
-const { checkId, checkIdCategory } = require('../helpers/db-validators');
+const { validateJWT } = require('../middlewares');
+
+const { checkId } = require('../helpers/db-validators');
 
 const { getAllCategories,
     getCategoryById,
     createCategory,
     deleteCategory,
-    updateCategory } = require('../controllers/category');
-const { validateJWT } = require('../middlewares');
+    updateCategory } = require('../controllers/category');    
+
+const Category = require('../models/category');
 
 const router = Router();
-
 
 // Get all categories - public
 router.get('/', getAllCategories);
@@ -20,8 +22,8 @@ router.get('/', getAllCategories);
 // Get category by Id
 router.get('/:id', [
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkIdCategory),
     validateFields,
+    check('id').custom(checkId, Category),
 ], getCategoryById);
 
 // Create a new category - private (TOKEN required)
@@ -33,15 +35,18 @@ router.post('/', [
 
 // Delete a category - private (TOKEN required)
 router.delete('/:id', [
+    validateJWT,
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkIdCategory),
+    check('id').custom(checkId, Category),
     validateFields,
 ], deleteCategory);
 
 // Update a category - private (TOKEN required)
 router.put('/:id', [
+    validateJWT,
+    check('name', 'The name is required').not().isEmpty(),
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkIdCategory),
+    check('id').custom(checkId, Category),
     validateFields,
 ], updateCategory);
 

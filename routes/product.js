@@ -2,6 +2,8 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { validateFields } = require('../middlewares/validate-fields');
+const { validateJWT } = require('../middlewares');
+
 const { checkId } = require('../helpers/db-validators');
 
 const { getAllProducts,
@@ -9,6 +11,8 @@ const { getAllProducts,
     createProduct,
     deleteProduct,
     updateProduct } = require('../controllers/product');
+
+const Product = require('../models/product');
 
 const router = Router();
 
@@ -21,12 +25,14 @@ router.get('/', [
 // Get product by Id
 router.get('/:id', [
     check('id', 'The ID is not valid').isMongoId(),
-    check('id').custom(checkId),
     validateFields,
+    check('id').custom(checkId, Product),
 ], getProductById);
 
 // Create a new product - private (TOKEN required)
 router.post('/', [
+    validateJWT,
+    check('name', 'The name is required').not().isEmpty(),
     validateFields,
 ], createProduct);
 

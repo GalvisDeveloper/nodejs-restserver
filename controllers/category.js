@@ -98,15 +98,35 @@ const updateCategory = async (req, res = response) => {
 
     try {
         const { id } = req.params;
-        const { _id, ...body } = req.body;
-        console.log(body)
-        const category = await Category.findByIdAndUpdate(id, body);
+        const { _id, status, user, ...body } = req.body;
 
-        res.status(200).json({
+        body.name = body.name.toUpperCase();
+        body.user = req.user._id;
+
+        // Check if there's another category with the same name 
+        const checkCategory = await Category.findOne({ name: body.name });
+
+        if (checkCategory) {
+            return res.status(400).json({
+                msg: "There's a category with the same name",
+            })
+        }
+
+        // Check if this user is allowed to update this category
+        const itExist = await Category.findById(id);
+
+        if (body.user.toString() !== itExist.user.toString()) {
+            return res.status(401).json({
+                msg: "You are not allowed to modify this category"
+            })
+        }
+
+        const category = await Category.findByIdAndUpdate(id, body, { new: true });
+
+        return res.status(200).json({
             msg: "Category updated",
             category
         })
-
     } catch (err) {
         console.log(err);
         res.status(500).json({
